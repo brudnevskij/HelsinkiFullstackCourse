@@ -1,15 +1,21 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Numbers from "../numbers/Numbers";
 import Adder from "../adder/Adder";
 import Search from "../search/Search";
+import axios from "axios";
+
 
 const App = () => {
     const [persons, setPersons] = useState([
-        {
-            name: 'Arto Hellas',
-            phone: '88888888888'
-        }
+
     ])
+    useEffect(() =>{
+        axios
+            .get("http://localhost:3001/persons")
+            .then(res =>{
+                setPersons(res.data)
+            })
+    },[])
     const [newName, setNewName] = useState('')
     const onChangeNameHandler = (event) => {
         setNewName(event.target.value)
