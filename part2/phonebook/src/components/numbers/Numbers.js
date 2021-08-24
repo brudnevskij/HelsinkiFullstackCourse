@@ -1,7 +1,7 @@
 import React from 'react'
 import Person from "./person/Person";
 
-const Numbers = ({persons, filterP}) => {
+const Numbers = ({persons, filterP, deleteHandler}) => {
     persons = persons.filter(person =>{
         if(person.name.toLowerCase().includes(filterP.toLowerCase())){
             return person
@@ -11,10 +11,10 @@ const Numbers = ({persons, filterP}) => {
     return (
         <>
             <ul>
-                {persons.map((person, id = -1) => {
+                {persons.map((person, id = 0) => {
                         id++;
                         return(
-                            <li key={id}><Person  name={person.name} phone={person.phone}/></li>
+                            <li key={id}><Person id={id} name={person.name} phone={person.number} deleteHandler={deleteHandler}/></li>
                         );
                     }
                 )}

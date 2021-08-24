@@ -1,10 +1,10 @@
 import React from 'react'
 
+const Person = ({name, phone, id, deleteHandler}) => {
 
-const Person = ({name, phone}) => {
     return(
         <>
-        Name: {name}, Phone: {phone}
+        Name: {name}, Phone: {phone} <button onClick={() =>{deleteHandler(id, name)}}>delete</button>
         </>
     )
 }
