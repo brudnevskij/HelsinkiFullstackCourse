@@ -3,11 +3,15 @@ import Numbers from "../numbers/Numbers";
 import Adder from "../adder/Adder";
 import Search from "../search/Search";
 import {getAll, addNew, deleteContact, changeNumb} from "../../services/phoneService";
+import SuccessMessage from "../SuccessMessage/SuccessMessage";
+import ErrorMes from "../ErrorMes/ErrorMes";
 const App = () => {
     const [reload, setReload] = useState(false)
     const [persons, setPersons] = useState([
 
     ])
+    const [sMessage, setSMessage] = useState(null)
+    const [errorM, setErrorM] = useState(null)
     useEffect(() =>{
         getAll()
             .then(newPersons =>{
@@ -20,7 +24,10 @@ const App = () => {
     }
     const deleteHandler = (id, name) =>{
         if(window.confirm(`Do you want to delete ${name} from your contacts?`)){
-            deleteContact(id)
+            deleteContact(id).catch((res)=>{
+                setErrorM(`${name} already deleted from your contacts`)
+                setTimeout(() =>{setErrorM(null)}, 3000)
+            })
             setReload(!reload)
         }
     }
@@ -34,10 +41,11 @@ const App = () => {
                     number: newPhone
                 }
                 changeNumb(guy.id, newNameObj)
-                alert(`${guy.name} changed number to ${newNameObj.number}`);
                 setNewName('')
                 setNewPhone('')
                 setTimeout(()=>{setReload(!reload)}, 1000)
+                setSMessage(`${newNameObj.name}'s number has been changed`)
+                setTimeout(()=>{setSMessage(null)}, 3000)
                 return
             }
             return
@@ -51,6 +59,9 @@ const App = () => {
         setNewName('')
         setNewPhone('')
         setTimeout(()=>{setReload(!reload)}, 1000)
+        setSMessage(`${newNameObj.name} has been added to your contacts`)
+        setTimeout(()=>{setSMessage(null)}, 3000)
+
     }
     const[newPhone, setNewPhone] = useState('')
     const onChangePhoneHandler = (event) =>{
@@ -65,6 +76,8 @@ const App = () => {
         return(
         <div>
             <h2>Phonebook</h2>
+            <ErrorMes message={errorM}/>
+            <SuccessMessage message={sMessage}/>
             <Search newFilter={newFilter} onChangeFilterHandler={onChangeFilterHandler}/>
 
             <Adder addName={addName} newName={newName} onChangeNameHandler={onChangeNameHandler} newPhone={newPhone} onChangePhoneHandler={onChangePhoneHandler}/>
